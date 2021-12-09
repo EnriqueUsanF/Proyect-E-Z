@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25/10/2020 08:43:20 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="Model.Empleados" table="empleados" catalog="proyect1" optimistic-lock="version">
+        <id name="idEmpleado" type="java.lang.Integer">
+            <column name="ID_Empleado" />
+            <generator class="identity" />
+        </id>
+        <property name="nombre" type="string">
+            <column name="nombre" length="25" />
+        </property>
+        <property name="APaterno" type="string">
+            <column name="A_Paterno" length="20" />
+        </property>
+        <property name="AMaterno" type="string">
+            <column name="A_Materno" length="20" />
+        </property>
+        <property name="telefono" type="java.lang.Long">
+            <column name="Telefono" />
+        </property>
+        <property name="direccion" type="string">
+            <column name="Direccion" length="160" />
+        </property>
+        <property name="correo" type="string">
+            <column name="Correo" length="40" />
+        </property>
+        <property name="puesto" type="string">
+            <column name="Puesto" length="20" />
+        </property>
+        <property name="horaEntrada" type="time">
+            <column name="Hora_Entrada" length="8" />
+        </property>
+        <property name="horaSalida" type="time">
+            <column name="Hora_Salida" length="8" />
+        </property>
+        <property name="salarioQuincenal" type="java.lang.Double">
+            <column name="Salario_Quincenal" precision="22" scale="0" />
+        </property>
+        <set name="ventases" table="ventas" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ID_Empleado" />
+            </key>
+            <one-to-many class="Model.Ventas" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Productos</title>
+        <style type="text/css">
+            body{
+                background-image: url(images/fondoTablas.png);
+                background-position-x: center;
+            }
+            .code{
+                background-color: #CC33CC;
+                color: #33FFFF;
+            }
+            .neg{
+                background-color: black;
+                color: white;
+            }
+            .whi{
+                background-color: white;
+                color: black;
+            }
+        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <h:form id ="formInsertar">
+            <center>
+                <p:panel header="Ingresa datos del producto" style="background-image: url(images/fondoTablasInv.png)">
+                <p:panelGrid columns="2" columnClasses="code, code">
+                    <p:outputLabel value="Descripcion"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.descripcion}"/>
+                    <p:outputLabel value="Cantidad en stock"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.cantidadStock}"/>
+                    
+                    <p:outputLabel for="datetime" value="Fecha y hora de abastecimiento:" />
+                    <p:calendar id="datetime" value="#{productosBean.producto.abastecido}" pattern="MM/dd/yyyy HH:mm" />
+                    
+                    <p:outputLabel value="Precio de menudeo"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.precioMenudeo}"/>
+                    <p:outputLabel value="Precio de mayoreo"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.precioMayoreo}"/>
+                </p:panelGrid>
+                <p:growl id="growl" life="1000" />
+                <p:commandButton style="background-color: #00FF66" actionListener="#{productosBean.insertar()}"
+                                 value="Agregar" update="growl"/>
+                </p:panel>
+            </center>
+            
+            <p:dataTable id="tabla" var="prd" value="#{productosBean.productos}"
+                         emptyMessage="No hay registros"
+                         paginator="true" rows="10" paginatorPosition="top"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                         {PreviusPageLink}{PageLinks} {NextPageLink}
+                         {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5">
+
+                <p:column headerText="ID" styleClass="neg" filterBy="#{prd.idProducto}">
+                    <h:outputText value="#{prd.idProducto}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Descripcion">
+                    <h:outputText value="#{prd.descripcion}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Cantidad en Stock">
+                    <h:outputText value="#{prd.cantidadStock}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Se abastecio">
+                    <h:outputText value="#{prd.abastecido}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Precio Menudeo">
+                    <h:outputText value="#{prd.precioMenudeo}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Precio Mayoreo">
+                    <h:outputText value="#{prd.precioMayoreo}" />
+                </p:column>
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Editar" onclick="PF('dlgmodificar').show()"
+                                     update=":formModificar">
+                        <f:setPropertyActionListener
+                            target="#{productosBean.producto}"
+                            value="#{prd}" />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Eliminar" onclick="PF('dlgeliminar').show()">
+                        <f:setPropertyActionListener
+                            target="#{productosBean.producto}"
+                            value="#{prd}"  />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+                
+            </p:dataTable>
+
+            <p:fieldset style="background-image: url(images/barraInferior.png); background-size: cover">
+                <center>
+                <h:panelGrid columns="3" cellpadding="5">
+                    <h:commandLink>
+                        <p:graphicImage url="/images/PDF.png" width="30"/>
+                        <p:dataExporter type="pdf" target="tabla" fileName="Lista de Productos" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:graphicImage url="/images/Excel.png" width="30"/>
+                        <p:dataExporter type="xls" target="tabla" fileName="Lista de Productos" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:link outcome="index" value="INICIO"/>
+                    </h:commandLink>
+                </h:panelGrid>
+                </center>
+            </p:fieldset>
+            
+        </h:form>
+                
+        <p:dialog id="dlg" header="Modificar Producto"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgmodificar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id ="formModificar">
+
+                <p:panel header="Ingresa datos del Producto" style="background-image: url(images/fondoTablasInv.png); background-size: cover">
+                    <p:panelGrid columns="2" columnClasses="code, code">
+                    <p:outputLabel value="Descripcion"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.descripcion}"/>
+                    <p:outputLabel value="Cantidad en stock"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.cantidadStock}"/>
+                    
+                    <p:outputLabel for="datetime" value="Fecha y hora de abastecimiento:" />
+                    <p:calendar id="datetime" value="#{productosBean.producto.abastecido}" pattern="MM/dd/yyyy HH:mm" />
+                    
+                    <p:outputLabel value="Precio de menudeo"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.precioMenudeo}"/>
+                    <p:outputLabel value="Precio de mayoreo"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.precioMayoreo}"/>
+
+                    <p:outputLabel value="Clave"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{productosBean.producto.idProducto}"/>
+                    </p:panelGrid>
+
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" actionListener="#{productosBean.actualizar()}"
+                                     value="Actualizar" 
+                                     update=":formInsertar"
+                                     onclick="PF('dlgmodificar').hide();" />
+                    </center>
+                </p:panel>
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlg2" header="Eliminar Producto"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgeliminar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id="formEliminar" >
+                <p:outputLabel value="¿Deseas eliminar el registro? " style="color: white" />
+                <p:commandButton style="background-color: #00FF66" actionListener="#{productosBean.eliminar()}"
+                                 value="Si" 
+                                 update=":formInsertar"
+                                 onclick="PF('dlgeliminar').hide();" />
+                <p:commandButton style="background-color: #00FF66" value="No"
+                                 onclick="PF('dig2').hide();"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>

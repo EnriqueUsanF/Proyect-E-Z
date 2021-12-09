@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Empleados</title>
+        <style type="text/css">
+            body{
+                background-image: url(images/fondoTablasInv.png);
+                background-position-x: center;
+            }
+            .code{
+                background-color: #CC33CC;
+                color: #33FFFF;
+            }
+            .neg{
+                background-color: black;
+                color: white;
+            }
+            .whi{
+                background-color: white;
+                color: black;
+            }
+        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <h:form id ="formInsertar">
+            <center>
+                <p:panel header="Ingresa datos del empleado" style="background-image: url(images/fondoTablas.png)">
+                <p:panelGrid columns="2" columnClasses="code, code">
+                    <p:outputLabel value="Nombres"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.nombre}"/>
+                    <p:outputLabel value="Paterno"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.APaterno}"/>
+                    <p:outputLabel value="Materno"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.AMaterno}"/>
+                    <p:outputLabel value="Telefono"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.telefono}"/>
+                    <p:outputLabel value="Direccion"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.direccion}"/>
+                    <p:outputLabel value="Correo"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.correo}"/>
+                    <p:outputLabel value="Puesto"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.puesto}"/>
+                    
+                    <p:outputLabel for="timeE" value="Hora de entrada:" />
+                    <p:calendar id="timeE" value="#{empleadosBean.empleado.horaEntrada}" pattern="HH:mm" timeOnly="true"/>
+                    <p:outputLabel for="timeS" value="Hora de salida:" />
+                    <p:calendar id="timeS" value="#{empleadosBean.empleado.horaSalida}" pattern="HH:mm" timeOnly="true"/>
+                    
+                    <p:outputLabel value="Salario"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.salarioQuincenal}"/>
+                    
+                </p:panelGrid>
+                <p:growl id="growl" life="1000" />
+                <p:commandButton style="background-color: #00FF66" actionListener="#{empleadosBean.insertar()}"
+                                 value="Agregar" update="growl"/>
+                </p:panel>
+            </center>
+            
+            <p:dataTable id="tabla" var="emp" value="#{empleadosBean.empleados}"
+                         emptyMessage="No hay registros"
+                         paginator="true" rows="10" paginatorPosition="top"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                         {PreviusPageLink}{PageLinks} {NextPageLink}
+                         {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5">
+
+                <p:column headerText="ID" styleClass="neg" filterBy="#{emp.idEmpleado}">
+                    <h:outputText value="#{emp.idEmpleado}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Nombre">
+                    <h:outputText value="#{emp.nombre}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Apellido Paterno">
+                    <h:outputText value="#{emp.APaterno}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Apellido Materno">
+                    <h:outputText value="#{emp.AMaterno}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Telefono">
+                    <h:outputText value="#{emp.telefono}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Direccion">
+                    <h:outputText value="#{emp.direccion}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Correo">
+                    <h:outputText value="#{emp.correo}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Puesto">
+                    <h:outputText value="#{emp.puesto}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Hora de entradas">
+                    <h:outputText value="#{emp.horaEntrada}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Hora de salida">
+                    <h:outputText value="#{emp.horaSalida}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Salario quincenal">
+                    <h:outputText value="#{emp.salarioQuincenal}" />
+                </p:column>
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Editar" onclick="PF('dlgmodificar').show()"
+                                     update=":formModificar">
+                        <f:setPropertyActionListener
+                            target="#{empleadosBean.empleado}"
+                            value="#{emp}" />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Eliminar" onclick="PF('dlgeliminar').show()">
+                        <f:setPropertyActionListener
+                            target="#{empleadosBean.empleado}"
+                            value="#{emp}"  />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+            </p:dataTable>
+
+            <p:fieldset style="background-image: url(images/barraInferior.png); background-size: cover">
+                <center>
+                <h:panelGrid columns="3" cellpadding="5">
+                    <h:commandLink>
+                        <p:graphicImage url="/images/PDF.png" width="30"/>
+                        <p:dataExporter type="pdf" target="tabla" fileName="Lista de Empleados" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:graphicImage url="/images/Excel.png" width="30"/>
+                        <p:dataExporter type="xls" target="tabla" fileName="Lista de Empleados" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:link outcome="index" value="INICIO"/>
+                    </h:commandLink>
+                </h:panelGrid>
+                </center>
+            </p:fieldset>
+            
+        </h:form>
+                
+        <p:dialog id="dlg" header="Modificar Empleado"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgmodificar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id ="formModificar">
+
+                <p:panel header="Ingresa datos del Empleado" style="background-image: url(images/fondoTablas.png); background-size: cover">
+                    <p:panelGrid columns="2" columnClasses="code, code">
+                    <p:outputLabel value="Nombres"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.nombre}"/>
+                    <p:outputLabel value="Paterno"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.APaterno}"/>
+                    <p:outputLabel value="Materno"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.AMaterno}"/>
+                    <p:outputLabel value="Telefono"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.telefono}"/>
+                    <p:outputLabel value="Direccion"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.direccion}"/>
+                    <p:outputLabel value="Correo"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.correo}"/>
+                    <p:outputLabel value="Puesto"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.puesto}"/>
+                    
+                    <p:outputLabel for="timeE" value="Hora de entrada:" />
+                    <p:calendar id="timeE" value="#{empleadosBean.empleado.horaEntrada}" pattern="HH:mm" timeOnly="true"/>
+                    <p:outputLabel for="timeS" value="Hora de salida:" />
+                    <p:calendar id="timeS" value="#{empleadosBean.empleado.horaSalida}" pattern="HH:mm" timeOnly="true"/>
+                    
+                    <p:outputLabel value="Salario"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.salarioQuincenal}"/>
+
+                        <p:outputLabel value="Clave"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{empleadosBean.empleado.idEmpleado}"/>
+                    </p:panelGrid>
+
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" actionListener="#{empleadosBean.actualizar()}"
+                                     value="Actualizar" 
+                                     update=":formInsertar"
+                                     onclick="PF('dlgmodificar').hide();" />
+                    </center>
+                </p:panel>
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlg2" header="Eliminar Empleado"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgeliminar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id="formEliminar" >
+                <p:outputLabel value="¿Deseas eliminar el registro? " style="color: white" />
+                <p:commandButton style="background-color: #00FF66" actionListener="#{empleadosBean.eliminar()}"
+                                 value="Si" 
+                                 update=":formInsertar"
+                                 onclick="PF('dlgeliminar').hide();" />
+                <p:commandButton style="background-color: #00FF66" value="No"
+                                 onclick="PF('dig2').hide();"/>
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+</html>

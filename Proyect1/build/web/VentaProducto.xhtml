@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>VentaProducto</title>
+        <style type="text/css">
+            body{
+                background-image: url(images/fondoTablasInv.png);
+                background-position-x: center;
+            }
+            .code{
+                background-color: #CC33CC;
+                color: #33FFFF;
+            }
+            .neg{
+                background-color: black;
+                color: white;
+            }
+            .whi{
+                background-color: white;
+                color: black;
+            }
+        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <p:growl id="msg" autoUpdate="true" />
+        <h:form id ="formInsertar">
+            <center>
+                <p:panel header="Ingresa datos de la venta/producto" style="background-image: url(images/fondoTablas.png)">
+                <p:panelGrid columns="2" columnClasses="code, code">
+                    
+                    <p:outputLabel value="Id del producto"/>
+                    
+                    <p:selectOneMenu value="#{ventaProductoBean.idProducto}">
+                        <f:selectItems value="#{productosBean.productos}" var="fk" itemLabel="#{fk.descripcion}" itemValue="#{fk.idProducto}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Cantidad"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{ventaProductoBean.ventaProducto.cantidadProducto}"/>
+                    
+                </p:panelGrid>
+                <p:growl id="growl" life="1000" />
+                <p:commandButton style="background-color: #00FF66" actionListener="#{ventaProductoBean.insertar()}"
+                                 value="Agregar" update="growl"/>
+                </p:panel>
+            </center>
+            
+            <p:dataTable id="tabla" var="vpd" value="#{ventaProductoBean.ventaProductos}"
+                         emptyMessage="No hay registros"
+                         paginator="true" rows="10" paginatorPosition="top"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                         {PreviusPageLink}{PageLinks} {NextPageLink}
+                         {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5">
+                <p:column headerText="ID" styleClass="neg" filterBy="#{vpd.idVentaProducto}">
+                    <h:outputText value="#{vpd.idVentaProducto}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="ID Producto">
+                    <h:outputText value="#{vpd.productos.idProducto}" />
+                </p:column>
+                <p:column styleClass="neg" headerText="Cantidad de Producto">
+                    <h:outputText value="#{vpd.cantidadProducto}" />
+                </p:column>
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Editar" onclick="PF('dlgmodificar').show()"
+                                     update=":formModificar">
+                        <f:setPropertyActionListener
+                            target="#{ventaProductoBean.ventaProducto}"
+                            value="#{vpd}" />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Eliminar" onclick="PF('dlgeliminar').show()">
+                        <f:setPropertyActionListener
+                            target="#{ventaProductoBean.ventaProducto}"
+                            value="#{vpd}"  />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+                
+            </p:dataTable>
+
+            <p:fieldset style="background-image: url(images/barraInferior.png); background-size: cover">
+                <center>
+                <h:panelGrid columns="3" cellpadding="5">
+                    <h:commandLink>
+                        <p:graphicImage url="/images/PDF.png" width="30"/>
+                        <p:dataExporter type="pdf" target="tabla" fileName="Lista de Venta Producto" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:graphicImage url="/images/Excel.png" width="30"/>
+                        <p:dataExporter type="xls" target="tabla" fileName="Lista de Venta Producto" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:link outcome="index" value="INICIO"/>
+                    </h:commandLink>
+                </h:panelGrid>
+                </center>
+            </p:fieldset>
+        </h:form>
+               
+        <p:dialog id="dlg" header="Modificar Venta/Producto"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgmodificar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id ="formModificar">
+
+                <p:panel header="Ingresa datos de Venta/Producto" style="background-image: url(images/fondoTablas.png); background-size: cover">
+                    <p:panelGrid columns="2" columnClasses="code, code">
+                    
+                    <p:outputLabel value="Id de Venta/Producto"/>
+                    
+                    <p:selectOneMenu value="#{ventaProductoBean.idProducto}">
+                        <f:selectItems value="#{productosBean.productos}" var="fk" itemLabel="#{fk.descripcion}" itemValue="#{fk.idProducto}" />
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel value="Cantidad"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{ventaProductoBean.ventaProducto.cantidadProducto}"/>
+                    <p:outputLabel value="Clave"/>
+                    <p:inputText style="background-color: #66FFFF" value="#{ventaProductoBean.ventaProducto.idVentaProducto}"/>
+                    </p:panelGrid>
+                    
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" actionListener="#{ventaProductoBean.actualizar()}"
+                                     value="Actualizar" 
+                                     update=":formInsertar"
+                                     onclick="PF('dlgmodificar').hide();" />
+                    </center>
+                </p:panel>
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlg2" header="Eliminar Venta/Producto"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgeliminar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id="formEliminar" >
+                <p:outputLabel value="¿Deseas eliminar el registro? " style="color: white" />
+                <p:commandButton style="background-color: #00FF66" actionListener="#{ventaProductoBean.eliminar()}"
+                                 value="Si" 
+                                 update=":formInsertar"
+                                 onclick="PF('dlgeliminar').hide();" />
+                <p:commandButton style="background-color: #00FF66" value="No"
+                                 onclick="PF('dig2').hide();"/>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>

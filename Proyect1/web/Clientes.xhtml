@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Clientes</title>
+        <style type="text/css">
+            body{
+                background-image: url(images/fondoTablas.png);
+                background-position-x: center;
+            }
+            .code{
+                background-color: #CC33CC;
+                color: #33FFFF;
+            }
+            .neg{
+                background-color: black;
+                color: white;
+            }
+            .whi{
+                background-color: white;
+                color: black;
+            }
+        </style>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <h:form id ="formInsertar" >
+            <center>
+                <p:panel header="Ingresa datos del cliente" style="background-image: url(images/fondoTablasInv.png)">
+                    <p:panelGrid columns="2" columnClasses="code, code">
+                        <p:outputLabel value="Nombre"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.nombre}"/>
+                        <p:outputLabel value="Telefono"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.telefono}"/>
+                        <p:outputLabel value="Correo"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.correo}"/>
+                        <p:outputLabel value="Direccion"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.direccion}"/>
+
+                        <p:outputLabel value="Tipo de Cliente"/>
+                        <p:selectOneMenu id="tipoMenudeoMayoreo" value="#{clientesBean.cliente.tipoMenudeoMayoreo}" required="true" label="tipo de cliente">
+                            <f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Mayoreo" itemValue="Mayoreo" />
+                            <f:selectItem itemLabel="Menudeo" itemValue="Menudeo" />
+                        </p:selectOneMenu>
+                        
+
+                    </p:panelGrid>
+                    <p:growl id="growl" life="1000" />
+                    <p:commandButton style="background-color: #00FF66" actionListener="#{clientesBean.insertar()}"
+                                     value="Agregar" update="growl"/>
+
+                </p:panel>
+            </center>
+
+            <p:dataTable id="tabla" var="cli" value="#{clientesBean.clientes}"
+                         emptyMessage="No hay registros"
+                         paginator="true" rows="10" paginatorPosition="top"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                         {PreviusPageLink}{PageLinks} {NextPageLink}
+                         {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5">
+
+                <p:column headerText="ID" styleClass="neg" filterBy="#{cli.idCliente}">
+                    <h:outputText value="#{cli.idCliente}" />
+                </p:column>
+                <p:column headerText="Nombre" styleClass="neg">
+                    <h:outputText value="#{cli.nombre}" />
+                </p:column>
+                <p:column headerText="Telefono" styleClass="neg">
+                    <h:outputText value="#{cli.telefono}" />
+                </p:column>
+                <p:column headerText="Correo" styleClass="neg">
+                    <h:outputText value="#{cli.correo}" />
+                </p:column>
+                <p:column headerText="Direccion" styleClass="neg">
+                    <h:outputText value="#{cli.direccion}" />
+                </p:column>
+                <p:column headerText="Tipo de Cliente" styleClass="neg">
+                    <h:outputText value="#{cli.tipoMenudeoMayoreo}" />
+                </p:column>
+                
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Editar" onclick="PF('dlgmodificar').show()"
+                                     update=":formModificar">
+                        <f:setPropertyActionListener
+                            target="#{clientesBean.cliente}"
+                            value="#{cli}" />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+                
+                <p:column styleClass="neg" headerText="Accion" exportable="false">
+                    <center>
+                    <p:commandButton style="background-color: #00FF66" value="Eliminar" onclick="PF('dlgeliminar').show()">
+                        <f:setPropertyActionListener
+                            target="#{clientesBean.cliente}"
+                            value="#{cli}"  />
+                    </p:commandButton>
+                    </center>
+                </p:column>
+            </p:dataTable>
+            
+            <p:fieldset style="background-image: url(images/barraInferior.png); background-size: cover">
+                <center>
+                <h:panelGrid columns="3" cellpadding="15">
+                    <h:commandLink>
+                        <p:graphicImage url="/images/PDF.png" width="30"/>
+                        <p:dataExporter type="pdf" target="tabla" fileName="Lista de Clientes" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:graphicImage url="/images/Excel.png" width="30"/>
+                        <p:dataExporter type="xls" target="tabla" fileName="Lista de Clientes" />
+                    </h:commandLink>
+                    <h:commandLink style="margin-left: 100px">
+                        <p:link outcome="index" value="INICIO"/>
+                    </h:commandLink>
+                </h:panelGrid>
+                </center>
+            </p:fieldset>
+            
+        </h:form>
+                
+        <p:dialog id="dlg" header="Modificar Cliente"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgmodificar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id ="formModificar">
+
+                <p:panel header="Ingresa datos del Cliente" style="background-image: url(images/fondoTablas.png); background-size: cover">
+                    <p:panelGrid columns="2" columnClasses="code, code">
+                    	<p:outputLabel value="Nombre"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.nombre}"/>
+                        <p:outputLabel value="Telefono"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.telefono}"/>
+                        <p:outputLabel value="Correo"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.correo}"/>
+                        <p:outputLabel value="Direccion"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.direccion}"/>
+
+                        <p:outputLabel value="Tipo de Cliente"/>
+                        <p:selectOneMenu id="tipoMenudeoMayoreo" value="#{clientesBean.cliente.tipoMenudeoMayoreo}" required="true" label="tipo de cliente">
+                            <f:selectItem itemLabel="Selecciona" itemValue="" noSelectionOption="true"/>
+                            <f:selectItem itemLabel="Mayoreo" itemValue="Mayoreo" />
+                            <f:selectItem itemLabel="Menudeo" itemValue="Menudeo" />
+                        </p:selectOneMenu>
+                        <p:outputLabel value="Clave"/>
+                        <p:inputText style="background-color: #66FFFF" value="#{clientesBean.cliente.idCliente}"/>
+                    </p:panelGrid>
+
+                    <center>
+                        <p:commandButton style="background-color: #00FF66" actionListener="#{clientesBean.actualizar()}"
+                                     value="Actualizar" 
+                                     update=":formInsertar"
+                                     onclick="PF('dlgmodificar').hide();" />
+                    </center>
+                </p:panel>
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlg2" header="Eliminar Cliente"
+                  showEffect="explode" hideEffect="bounce"
+                  widgetVar="dlgeliminar" modal="true"
+                  resizable="false" minWidth="200"
+                  styleClass="neg"
+                  >
+            <h:form id="formEliminar" >
+                <p:outputLabel value="¿Deseas eliminar el registro? " style="color: white" />
+                <p:commandButton style="background-color: #00FF66" actionListener="#{clientesBean.eliminar()}"
+                                 value="Si" 
+                                 update=":formInsertar"
+                                 onclick="PF('dlgeliminar').hide();" />
+                <p:commandButton style="background-color: #00FF66" value="No"
+                                 onclick="PF('dig2').hide();"/>
+            </h:form>
+        </p:dialog>
+        
+    </h:body>
+</html>

@@ -1,0 +1,58 @@
+create database Proyect1;
+use Proyect1;
+
+create table Empleados(
+ID_Empleado int auto_increment primary key,
+nombre varchar(25),
+A_Paterno varchar(20),
+A_Materno varchar(20),
+Telefono bigint,
+Direccion varchar(160),
+Correo varchar(40),
+Puesto varchar(20),
+Hora_Entrada time,
+Hora_Salida time,
+Salario_Quincenal double);
+desc Empleados;
+
+create table Productos(
+ID_Producto int auto_increment primary key,
+Descripcion varchar(30),
+Cantidad_Stock int,
+Abastecido datetime,
+Precio_Menudeo double,
+Precio_Mayoreo double);
+desc Productos;
+
+create table Clientes(
+ID_Cliente int auto_increment primary key,
+Nombre varchar(25),
+Telefono bigint,
+Correo varchar(40),
+Direccion varchar(160),
+TipoMenudeoMayoreo varchar(15));
+desc Clientes;
+
+create table VentaProducto(
+ID_VentaProducto int auto_increment primary key,
+ID_Producto int,
+cantidadProducto int,
+foreign key (ID_Producto) references Productos(ID_Producto));
+desc VentaProducto;
+
+create table Ventas(
+ID_Venta int auto_increment primary key,
+ID_VentaProducto int,
+ID_Empleado int,
+ID_Cliente int,
+CantidadVenta int,
+FechaVenta date,
+FechaRegistro datetime,
+MontoTransporte double,
+IVA double,
+PrecioFinal double,
+foreign key (ID_VentaProducto) references VentaProducto(ID_VentaProducto),
+foreign key (ID_Empleado) references Empleados(ID_Empleado),
+foreign key (ID_Cliente) references Clientes(ID_Cliente));
+desc Ventas;
+
